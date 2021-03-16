@@ -32,13 +32,17 @@ class DailyReports:
         self.latest_base_url = helper_get_latest_data_url(JHU_CSSE_FILE_PATHS['BASE_URL_DAILY_REPORTS'])
 
     # Get data from daily reports
-    def get_data_daily_reports(self, US=False) -> pd.DataFrame:
+    def get_data_daily_reports(self, US: bool = False) -> pd.DataFrame:
         """ Get data from BASE_URL_DAILY_REPORTS """
         # Extract the data
-        if US is False:
-            df = pd.read_csv(self.latest_base_url)
-        else: 
-             df = pd.read_csv(JHU_CSSE_FILE_PATHS['BASE_URL_DAILY_REPORTS_US'])
+        latest_base_url = None
+        if US:
+            latest_base_url = helper_get_latest_data_url(JHU_CSSE_FILE_PATHS['BASE_URL_DAILY_REPORTS_US'])
+        else:
+            latest_base_url = helper_get_latest_data_url(JHU_CSSE_FILE_PATHS['BASE_URL_DAILY_REPORTS'])
+        
+        # Extract the data
+        df = pd.read_csv(latest_base_url)
         # Data pre-processing
         concerned_columns = ['Confirmed', 'Deaths', 'Recovered', 'Active']
         df = helper_df_cols_cleaning(df, concerned_columns, int)
